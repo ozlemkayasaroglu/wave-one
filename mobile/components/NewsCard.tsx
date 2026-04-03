@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Linking,
 } from 'react-native';
+import { router } from 'expo-router';
 import type { NewsItem } from '@/lib/types';
 import { CATEGORY_COLORS } from '@/lib/types';
 import type { SummaryData } from '@/lib/types';
@@ -46,7 +46,21 @@ export function NewsCard({ item, summary, summaryLoading, summaryError, onSummar
       </View>
 
       {/* Title */}
-      <TouchableOpacity onPress={() => Linking.openURL(item.url)} activeOpacity={0.8}>
+      <TouchableOpacity
+        onPress={() => router.push({
+          pathname: '/article',
+          params: {
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            url: item.url,
+            source: item.source,
+            category: item.category,
+            publishedAt: item.publishedAt,
+          },
+        })}
+        activeOpacity={0.8}
+      >
         <Text style={styles.title}>{item.title}</Text>
       </TouchableOpacity>
 

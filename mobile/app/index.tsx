@@ -6,17 +6,25 @@ import {
   Text,
   ActivityIndicator,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import { Header } from '@/components/Header';
 import { CategoryTab } from '@/components/CategoryTab';
 import { NewsCard } from '@/components/NewsCard';
 import { useFeed } from '@/hooks/useFeed';
 import { useSummary } from '@/hooks/useSummary';
-import type { Category, NewsItem } from '@/lib/types';
+import type { Category, NewsItem, Period } from '@/lib/types';
+
+const PERIODS: { key: Period; label: string }[] = [
+  { key: 'daily', label: 'Bugün' },
+  { key: 'weekly', label: 'Bu Hafta' },
+  { key: 'monthly', label: 'Bu Ay' },
+];
 
 export default function HomeScreen() {
   const [category, setCategory] = useState<Category>('software');
-  const { items, loading, error, refreshing, refresh } = useFeed(category);
+  const [period, setPeriod] = useState<Period>('daily');
+  const { items, loading, error, refreshing, refresh } = useFeed(category, period);
   const { summaries, loading: summaryLoading, errors: summaryErrors, getSummary } = useSummary();
 
   const handleCategoryChange = useCallback((cat: Category) => {
@@ -40,6 +48,22 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Header />
       <CategoryTab active={category} onChange={handleCategoryChange} />
+
+      {/* Period filter */}
+      <View style={styles.periodBar}>
+        {PERIODS.map((p) => (
+          <TouchableOpacity
+            key={p.key}
+            onPress={() => setPeriod(p.key)}
+            style={[styles.periodBtn, period === p.key && styles.periodBtnActive]}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.periodLabel, period === p.key && styles.periodLabelActive]}>
+              {p.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
       {loading && !refreshing ? (
         <View style={styles.center}>
@@ -80,6 +104,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#060f09',
+  },
+  periodBar: {
+    flexDirection: 'row',
+    backgroundColor: '#060f09',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#0f2014',
+  },
+  periodBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: '#1a3520',
+    borderRadius: 2,
+  },
+  periodBtnActive: {
+    borderColor: '#4caf8c',
+    backgroundColor: '#0d2516',
+  },
+  periodLabel: {
+    color: '#4a6650',
+    fontSize: 11,
+    fontFamily: 'monospace',
+    letterSpacing: 0.5,
+  },
+  periodLabelActive: {
+    color: '#4caf8c',
   },
   list: {
     paddingBottom: 40,
