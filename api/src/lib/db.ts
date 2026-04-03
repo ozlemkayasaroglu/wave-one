@@ -1,15 +1,17 @@
 import { neon, NeonQueryFunction } from '@neondatabase/serverless';
 
-let _sql: NeonQueryFunction<false, false> | null = null;
+const sqlCache = new Map<string, NeonQueryFunction<false, false>>();
 
-export function getSql(): NeonQueryFunction<false, false> | null {
-  if (!process.env.DATABASE_URL) return null;
-  if (!_sql) _sql = neon(process.env.DATABASE_URL);
-  return _sql;
+export function getSql(databaseUrl: string): NeonQueryFunction<false, false> | null {
+  if (!databaseUrl) return null;
+  if (!sqlCache.has(databaseUrl)) {
+    sqlCache.set(databaseUrl, neon(databaseUrl));
+  }
+  return sqlCache.get(databaseUrl)!;
 }
 
-export async function ensureSchema(): Promise<void> {
-  const sql = getSql();
+export async function ensureSchema(databaseUrl: string): Promise<void> {
+  const sql = getSql(databaseUrl);
   if (!sql) return;
   await sql`
     CREATE TABLE IF NOT EXISTS article_cache (
