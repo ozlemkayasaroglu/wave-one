@@ -20,4 +20,15 @@ export async function ensureSchema(databaseUrl: string): Promise<void> {
       updated_at  TIMESTAMPTZ DEFAULT NOW()
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS users (
+      id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      email         TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      salt          TEXT NOT NULL,
+      plan          TEXT NOT NULL DEFAULT 'none',
+      plan_started_at TIMESTAMPTZ,
+      created_at    TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
 }

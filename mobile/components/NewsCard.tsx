@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import type { NewsItem } from '@/lib/types';
@@ -45,7 +46,7 @@ export function NewsCard({ item, summary, summaryLoading, summaryError, onSummar
         <Text style={styles.time}>{timeAgo(item.publishedAt)}</Text>
       </View>
 
-      {/* Title */}
+      {/* Title + Description + Thumbnail */}
       <TouchableOpacity
         onPress={() => router.push({
           pathname: '/article',
@@ -57,17 +58,27 @@ export function NewsCard({ item, summary, summaryLoading, summaryError, onSummar
             source: item.source,
             category: item.category,
             publishedAt: item.publishedAt,
+            imageUrl: item.imageUrl ?? '',
           },
         })}
         activeOpacity={0.8}
       >
-        <Text style={styles.title}>{item.title}</Text>
+        <View style={styles.contentRow}>
+          <View style={styles.textBlock}>
+            <Text style={styles.title}>{item.title}</Text>
+            {!!item.description && (
+              <Text style={styles.description} numberOfLines={2}>{item.description}</Text>
+            )}
+          </View>
+          {!!item.imageUrl && (
+            <Image
+              source={{ uri: item.imageUrl }}
+              style={styles.thumbnail}
+              resizeMode="cover"
+            />
+          )}
+        </View>
       </TouchableOpacity>
-
-      {/* Description */}
-      {!!item.description && (
-        <Text style={styles.description} numberOfLines={2}>{item.description}</Text>
-      )}
 
       {/* Action bar */}
       <View style={styles.actions}>
@@ -142,18 +153,32 @@ const styles = StyleSheet.create({
     color: '#4a6650',
     fontFamily: 'monospace',
   },
+  contentRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 10,
+  },
+  textBlock: {
+    flex: 1,
+  },
   title: {
     color: '#e4f5e0',
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 22,
-    marginBottom: 6,
+    marginBottom: 4,
+  },
+  thumbnail: {
+    width: 80,
+    height: 80,
+    borderRadius: 4,
+    backgroundColor: '#1a2f1e',
+    flexShrink: 0,
   },
   description: {
     color: '#6b8f72',
     fontSize: 13,
     lineHeight: 19,
-    marginBottom: 10,
   },
   actions: {
     flexDirection: 'row',

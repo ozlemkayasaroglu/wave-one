@@ -1,4 +1,4 @@
-export type Category = 'law' | 'health' | 'education' | 'software';
+export type Category = 'law' | 'health' | 'education' | 'politics' | 'economy';
 export type Period = 'daily' | 'weekly' | 'monthly';
 
 export interface NewsItem {
@@ -23,7 +23,8 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   law: 'Hukuk',
   health: 'Sağlık',
   education: 'Eğitim',
-  software: 'Yazılım',
+  politics: 'Siyaset',
+  economy: 'Ekonomi',
 };
 
-export const CATEGORIES: Category[] = ['law', 'health', 'education', 'software'];
+export const CATEGORIES: Category[] = ['law', 'health', 'education', 'politics', 'economy'];

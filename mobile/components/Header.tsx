@@ -2,15 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export function Header() {
+interface Props {
+  accentColor: string;
+}
+
+export function Header({ accentColor }: Props) {
   const insets = useSafeAreaInsets();
   return (
     <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
       <View style={styles.row}>
-        <Text style={styles.logo}>WAVE<Text style={styles.logoAccent}>:ONE</Text></Text>
+        <Text style={styles.logo}>WAVE<Text style={{ color: accentColor }}>:ONE</Text></Text>
         <Text style={styles.tagline}>PROFESSIONAL BRIEFING</Text>
       </View>
-      <View style={styles.divider} />
+      <View style={[styles.divider, { backgroundColor: accentColor + '22' }]} />
     </View>
   );
 }

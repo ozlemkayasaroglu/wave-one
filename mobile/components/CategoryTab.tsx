@@ -6,9 +6,10 @@ import { CATEGORIES, CATEGORY_LABELS, CATEGORY_COLORS } from '@/lib/types';
 interface Props {
   active: Category;
   onChange: (cat: Category) => void;
+  categories?: Category[];
 }
 
-export function CategoryTab({ active, onChange }: Props) {
+export function CategoryTab({ active, onChange, categories = CATEGORIES }: Props) {
   return (
     <ScrollView
       horizontal
@@ -16,7 +17,7 @@ export function CategoryTab({ active, onChange }: Props) {
       style={styles.scroll}
       contentContainerStyle={styles.container}
     >
-      {CATEGORIES.map((cat) => {
+      {categories.map((cat) => {
         const isActive = cat === active;
         const color = CATEGORY_COLORS[cat];
         return (
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   tab: {
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 16,
     borderBottomWidth: 2,
     borderBottomColor: 'transparent',

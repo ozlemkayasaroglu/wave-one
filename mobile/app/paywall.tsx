@@ -11,17 +11,30 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
 const FEATURES = [
-  'Hukuk, Sağlık, Eğitim ve Yazılım haberleri',
+  'Sektörünüzdeki haberleri anında takip edin',
   'AI destekli Türkçe özet ve çeviri',
-  'Günlük / haftalık / aylık akış',
+  'Günlük, haftalık ve aylık haber akışı',
   'Reklamsız, saf içerik deneyimi',
-  'Neon DB ile hız — tekrar üretim yok',
-  'Sürekli güncellenen kaynaklar',
+  'Sürekli güncellenen haber kaynakları',
+  'Instagram, Twitter ve LinkedIn için kişiselleştirilmiş post üretimi',
 ];
 
 export default function PaywallScreen() {
   const insets = useSafeAreaInsets();
   const [selected, setSelected] = useState<'monthly' | 'yearly'>('yearly');
+
+  function startTrial() {
+    router.push({ pathname: '/login', params: { plan: 'trial' } });
+  }
+
+  function subscribe() {
+    router.push({ pathname: '/login', params: { plan: selected } });
+  }
+
+  function restorePurchase() {
+    // Kullanıcı giriş yaparak aboneliği geri yükleyebilir
+    router.push({ pathname: '/login', params: { plan: '' } });
+  }
 
   return (
     <ScrollView
@@ -95,13 +108,15 @@ export default function PaywallScreen() {
       </View>
 
       {/* CTA */}
-      <TouchableOpacity style={styles.cta} activeOpacity={0.85}>
+      <TouchableOpacity style={styles.cta} onPress={subscribe} activeOpacity={0.85}>
         <Text style={styles.ctaText}>
           {selected === 'monthly' ? '₺99/ay ile Başla' : '₺790/yıl ile Başla'}
         </Text>
       </TouchableOpacity>
 
-      <Text style={styles.trial}>7 gün ücretsiz dene · İstediğin zaman iptal et</Text>
+      <TouchableOpacity onPress={startTrial} activeOpacity={0.7}>
+        <Text style={styles.trial}>7 gün ücretsiz dene · İstediğin zaman iptal et</Text>
+      </TouchableOpacity>
 
       <View style={styles.divider} />
 
@@ -115,15 +130,11 @@ export default function PaywallScreen() {
           <Text style={styles.legalLink}>Gizlilik Politikası</Text>
         </TouchableOpacity>
         <Text style={styles.legalDot}>·</Text>
-        <TouchableOpacity onPress={() => Linking.openURL('https://waveone.app/restore')}>
+        <TouchableOpacity onPress={restorePurchase}>
           <Text style={styles.legalLink}>Satın Alımı Geri Yükle</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Skip */}
-      <TouchableOpacity onPress={() => router.back()} style={styles.skip}>
-        <Text style={styles.skipText}>Şimdi değil</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }

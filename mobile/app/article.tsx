@@ -7,12 +7,14 @@ import {
   ScrollView,
   Linking,
   ActivityIndicator,
+  Clipboard,
+  Image,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { fetchSummary } from '@/lib/api';
+import { fetchSummary, generatePost } from '@/lib/api';
 import { localGet, localSet } from '@/lib/localCache';
-import type { NewsItem, SummaryData } from '@/lib/types';
+import type { NewsItem, SummaryData, SocialPlatform } from '@/lib/types';
 import { CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 
 export default function ArticleScreen() {
@@ -25,6 +27,7 @@ export default function ArticleScreen() {
     source: string;
     category: string;
     publishedAt: string;
+    imageUrl?: string;
   }>();
 
   const item: NewsItem = {
@@ -40,6 +43,12 @@ export default function ArticleScreen() {
   const [summary, setSummary] = useState<SummaryData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const [postPlatform, setPostPlatform] = useState<SocialPlatform | null>(null);
+  const [postContent, setPostContent] = useState('');
+  const [postLoading, setPostLoading] = useState(false);
+  const [postError, setPostError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const accentColor = CATEGORY_COLORS[item.category] || '#4caf8c';
 
@@ -61,6 +70,38 @@ export default function ArticleScreen() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleGeneratePost(platform: SocialPlatform) {
+    if (postPlatform === platform && postContent) {
+      setPostPlatform(null);
+      setPostContent('');
+      return;
+    }
+    setPostPlatform(platform);
+    setPostContent('');
+    setPostError('');
+    setCopied(false);
+    setPostLoading(true);
+    try {
+      const content = await generatePost(
+        platform,
+        summary?.translatedTitle ?? item.title,
+        summary?.summary ?? item.description,
+        summary?.keyPoints ?? [],
+      );
+      setPostContent(content);
+    } catch {
+      setPostError('Post oluşturulamadı');
+    } finally {
+      setPostLoading(false);
+    }
+  }
+
+  function copyPost() {
+    Clipboard.setString(postContent);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   const timeAgo = (dateStr: string) => {
@@ -93,6 +134,15 @@ export default function ArticleScreen() {
           <Text style={[styles.source, { color: accentColor }]}>{item.source.toUpperCase()}</Text>
           <Text style={styles.time}>{timeAgo(item.publishedAt)}</Text>
         </View>
+
+        {/* Hero image */}
+        {!!params.imageUrl && (
+          <Image
+            source={{ uri: params.imageUrl }}
+            style={styles.heroImage}
+            resizeMode="cover"
+          />
+        )}
 
         {/* Original title */}
         <Text style={styles.originalTitle}>{item.title}</Text>
@@ -132,6 +182,57 @@ export default function ArticleScreen() {
           <View style={styles.descSection}>
             <Text style={styles.descLabel}>AÇIKLAMA</Text>
             <Text style={styles.descText}>{item.description}</Text>
+          </View>
+        )}
+
+        {/* Social post generation */}
+        {summary && (
+          <View style={styles.socialSection}>
+            <Text style={styles.socialLabel}>SOSYAL MEDYA POSTU OLUŞTUR</Text>
+            <View style={styles.socialBtns}>
+              {([
+                { platform: 'linkedin' as SocialPlatform, label: 'LinkedIn', color: '#0a66c2' },
+                { platform: 'instagram' as SocialPlatform, label: 'Instagram', color: '#e1306c' },
+                { platform: 'twitter' as SocialPlatform, label: 'X / Twitter', color: '#e7e9ea' },
+              ]).map(({ platform, label, color }) => (
+                <TouchableOpacity
+                  key={platform}
+                  style={[
+                    styles.socialBtn,
+                    { borderColor: color },
+                    postPlatform === platform && { backgroundColor: '#0d1f11' },
+                  ]}
+                  onPress={() => handleGeneratePost(platform)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.socialBtnText, { color }]}>{label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {postLoading && (
+              <View style={styles.postLoadingRow}>
+                <ActivityIndicator size="small" color={accentColor} />
+                <Text style={styles.postLoadingText}>Post hazırlanıyor...</Text>
+              </View>
+            )}
+
+            {postError ? (
+              <Text style={styles.postError}>{postError}</Text>
+            ) : postContent ? (
+              <View style={styles.postPanel}>
+                <Text style={styles.postContent}>{postContent}</Text>
+                <TouchableOpacity
+                  style={[styles.copyBtn, { borderColor: accentColor }]}
+                  onPress={copyPost}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.copyBtnText, { color: accentColor }]}>
+                    {copied ? '✓ Kopyalandı' : 'Kopyala'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : null}
           </View>
         )}
 
@@ -180,6 +281,13 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
+  },
+  heroImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 4,
+    backgroundColor: '#1a2f1e',
+    marginBottom: 16,
   },
   meta: {
     flexDirection: 'row',
@@ -290,5 +398,74 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: 'monospace',
     letterSpacing: 1,
+  },
+  socialSection: {
+    marginBottom: 24,
+  },
+  socialLabel: {
+    color: '#3a5a42',
+    fontSize: 9,
+    letterSpacing: 2,
+    fontFamily: 'monospace',
+    marginBottom: 12,
+  },
+  socialBtns: {
+    flexDirection: 'row',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
+  socialBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderRadius: 2,
+  },
+  socialBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    fontFamily: 'monospace',
+    letterSpacing: 0.5,
+  },
+  postLoadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 12,
+  },
+  postLoadingText: {
+    color: '#4a6650',
+    fontSize: 12,
+    fontFamily: 'monospace',
+  },
+  postError: {
+    color: '#e07070',
+    fontSize: 13,
+    marginTop: 10,
+  },
+  postPanel: {
+    backgroundColor: '#0d1f11',
+    borderRadius: 4,
+    padding: 14,
+    marginTop: 12,
+    borderLeftWidth: 2,
+    borderLeftColor: '#2d5a35',
+  },
+  postContent: {
+    color: '#b8d4bc',
+    fontSize: 13,
+    lineHeight: 21,
+    marginBottom: 12,
+  },
+  copyBtn: {
+    borderWidth: 1,
+    borderRadius: 2,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    alignSelf: 'flex-start',
+  },
+  copyBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    fontFamily: 'monospace',
   },
 });

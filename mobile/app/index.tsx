@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   View,
   FlatList,
@@ -8,12 +8,14 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { Header } from '@/components/Header';
 import { CategoryTab } from '@/components/CategoryTab';
 import { NewsCard } from '@/components/NewsCard';
 import { useFeed } from '@/hooks/useFeed';
 import { useSummary } from '@/hooks/useSummary';
 import type { Category, NewsItem, Period } from '@/lib/types';
+import { CATEGORIES, CATEGORY_COLORS } from '@/lib/types';
 
 const PERIODS: { key: Period; label: string }[] = [
   { key: 'daily', label: 'Bugün' },
@@ -22,8 +24,30 @@ const PERIODS: { key: Period; label: string }[] = [
 ];
 
 export default function HomeScreen() {
-  const [category, setCategory] = useState<Category>('software');
+  const [category, setCategory] = useState<Category>('law');
   const [period, setPeriod] = useState<Period>('daily');
+  const [userCategories, setUserCategories] = useState<Category[]>(CATEGORIES);
+
+  useEffect(() => {
+    async function loadCategories() {
+      const saved = await SecureStore.getItemAsync('waveone_categories');
+      if (saved) {
+        const parsed: Category[] = JSON.parse(saved);
+        if (parsed.length > 0) {
+          setUserCategories(parsed);
+          setCategory(parsed[0]);
+        }
+      } else {
+        const single = await SecureStore.getItemAsync('waveone_category');
+        if (single && CATEGORIES.includes(single as Category)) {
+          setUserCategories([single as Category]);
+          setCategory(single as Category);
+        }
+      }
+    }
+    loadCategories();
+  }, []);
+  const accentColor = CATEGORY_COLORS[category];
   const { items, loading, error, refreshing, refresh } = useFeed(category, period);
   const { summaries, loading: summaryLoading, errors: summaryErrors, getSummary } = useSummary();
 
@@ -46,8 +70,8 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Header />
-      <CategoryTab active={category} onChange={handleCategoryChange} />
+      <Header accentColor={accentColor} />
+      <CategoryTab active={category} onChange={handleCategoryChange} categories={userCategories} />
 
       {/* Period filter */}
       <View style={styles.periodBar}>
@@ -55,10 +79,16 @@ export default function HomeScreen() {
           <TouchableOpacity
             key={p.key}
             onPress={() => setPeriod(p.key)}
-            style={[styles.periodBtn, period === p.key && styles.periodBtnActive]}
+            style={[
+              styles.periodBtn,
+              period === p.key && { borderColor: accentColor, backgroundColor: accentColor + '18' },
+            ]}
             activeOpacity={0.7}
           >
-            <Text style={[styles.periodLabel, period === p.key && styles.periodLabelActive]}>
+            <Text style={[
+              styles.periodLabel,
+              period === p.key && { color: accentColor },
+            ]}>
               {p.label}
             </Text>
           </TouchableOpacity>
@@ -67,7 +97,7 @@ export default function HomeScreen() {
 
       {loading && !refreshing ? (
         <View style={styles.center}>
-          <ActivityIndicator color="#4caf8c" size="large" />
+          <ActivityIndicator color={accentColor} size="large" />
           <Text style={styles.loadingText}>Haberler yükleniyor...</Text>
         </View>
       ) : error ? (
@@ -83,8 +113,8 @@ export default function HomeScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={refresh}
-              tintColor="#4caf8c"
-              colors={['#4caf8c']}
+              tintColor={accentColor}
+              colors={[accentColor]}
             />
           }
           contentContainerStyle={styles.list}

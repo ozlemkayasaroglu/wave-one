@@ -3,7 +3,3 @@ main = "src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
-[vars]
-# override in Cloudflare Dashboard → Workers → wave-one-api → Settings → Variables
-GROQ_API_KEY = ""
-DATABASE_URL = ""
