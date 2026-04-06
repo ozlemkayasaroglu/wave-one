@@ -388,10 +388,104 @@
       font-family: monospace;
     }
 
+    /* COMING SOON SECTION */
+    .coming-soon-section {
+      padding: 100px 24px;
+      text-align: center;
+    }
+
+    .coming-soon-inner {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .cs-label {
+      font-family: monospace;
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .cs-store-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 28px;
+      margin-bottom: 32px;
+    }
+
+    .cs-play-icon {
+      width: 32px;
+      height: 32px;
+      color: var(--accent);
+    }
+
+    .cs-store-name {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+
+    .cs-desc {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .cs-form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cs-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 14px;
+      width: 260px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .cs-input:focus { border-color: var(--accent); }
+    .cs-input::placeholder { color: var(--text-dim); }
+
+    .cs-btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 4px;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s;
+    }
+
+    .cs-btn:hover { opacity: 0.85; }
+
+    .cs-note {
+      margin-top: 16px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
     @media (max-width: 600px) {
       nav { padding: 16px 20px; }
       .hero { padding: 64px 20px 60px; }
       .section { padding: 60px 20px; }
+      .cs-input { width: 100%; }
+      .cs-btn { width: 100%; }
     }
   </style>
 </head>
@@ -416,76 +510,22 @@
 
   <div class="divider"></div>
 
-  <!-- CATEGORIES -->
-  <section class="section">
-    <div class="section-label">KİME YÖNELİK</div>
-    <h2>Mesleğinize özel<br>haber akışı.</h2>
-    <div class="categories">
-      <div class="cat-card" style="--accent-color: #c9a050">
-        <div class="cat-dot" style="background:#c9a050"></div>
-        <div class="cat-title" style="color:#c9a050">Hukuk</div>
-        <div class="cat-sub">Avukat · Hakim · Savcı</div>
+  <!-- COMING SOON -->
+  <section class="coming-soon-section">
+    <div class="coming-soon-inner">
+      <div class="cs-label">YAKINDA</div>
+      <div class="cs-store-row">
+        <svg class="cs-play-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 20.5v-17c0-.83 1.08-1.24 1.68-.64l14 8.5c.51.31.51 1.06 0 1.37l-14 8.5C4.08 21.74 3 21.33 3 20.5z" fill="currentColor"/>
+        </svg>
+        <span class="cs-store-name">Google Play</span>
       </div>
-      <div class="cat-card" style="--accent-color: #6b9e7a">
-        <div class="cat-dot" style="background:#6b9e7a"></div>
-        <div class="cat-title" style="color:#6b9e7a">Sağlık</div>
-        <div class="cat-sub">Doktor · Hemşire · Sağlık Çalışanı</div>
-      </div>
-      <div class="cat-card" style="--accent-color: #7090c0">
-        <div class="cat-dot" style="background:#7090c0"></div>
-        <div class="cat-title" style="color:#7090c0">Eğitim</div>
-        <div class="cat-sub">Öğretmen · Akademisyen</div>
-      </div>
-      <div class="cat-card" style="--accent-color: #c06070">
-        <div class="cat-dot" style="background:#c06070"></div>
-        <div class="cat-title" style="color:#c06070">Siyaset</div>
-        <div class="cat-sub">Siyasetçi · Analist · Gazeteci</div>
-      </div>
-      <div class="cat-card" style="--accent-color: #50a0c9">
-        <div class="cat-dot" style="background:#50a0c9"></div>
-        <div class="cat-title" style="color:#50a0c9">Ekonomi</div>
-        <div class="cat-sub">Ekonomist · Finans Uzmanı · Banker</div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- FEATURES -->
-  <section class="section" id="features">
-    <div class="section-label">ÖZELLİKLER</div>
-    <h2>Sadece haberleri okuma,<br>onlarla bir şey yap.</h2>
-    <div class="features">
-      <div class="feature">
-        <div class="feature-icon">⚡</div>
-        <h3>Anında Takip</h3>
-        <p>Sektörünüzdeki gelişmeleri günlük, haftalık ve aylık akışlarla kaçırmadan takip edin.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🤖</div>
-        <h3>AI Destekli Türkçe Özet</h3>
-        <p>Her haber anında Türkçeye çevrilerek özetlenir. İngilizce duvarları aşmak için dakikalarınızı harcamanıza gerek yok.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">✍️</div>
-        <h3>Sosyal Medya Postu</h3>
-        <p>Haberi okur okumaz LinkedIn, Instagram ve X için kişiselleştirilmiş post üretin. Tek tuşla paylaşıma hazır.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🚫</div>
-        <h3>Reklamsız Deneyim</h3>
-        <p>Dikkatinizi dağıtacak hiçbir şey yok. Sadece sizi ilgilendiren haberler.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🎯</div>
-        <h3>Kişisel Akış</h3>
-        <p>Onboarding'de seçtiğiniz alanlara göre akışınız tamamen size özel olarak şekillenir.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🔄</div>
-        <h3>Sürekli Güncelleme</h3>
-        <p>Kaynaklar sürekli taranır. Her gün işe başladığınızda gündem sizi bekliyor.</p>
-      </div>
+      <p class="cs-desc">Wave:One çok yakında Android'de. İlk haberdar olmak için e-postanı bırak.</p>
+      <form class="cs-form" onsubmit="handleSubmit(event)">
+        <input class="cs-input" type="email" placeholder="e-posta adresin" required />
+        <button class="cs-btn" type="submit">Beni Haberdar Et</button>
+      </form>
+      <p class="cs-note" id="cs-success" style="display:none; color:var(--accent)">✓ Kaydedildi, yakında haber vereceğiz!</p>
     </div>
   </section>
 
@@ -547,5 +587,12 @@
     <div class="footer-copy">© 2026 Wave:One. Tüm hakları saklıdır.</div>
   </footer>
 
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      document.getElementById('cs-success').style.display = 'block';
+      e.target.style.display = 'none';
+    }
+  </script>
 </body>
 </html>
