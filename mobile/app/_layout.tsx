@@ -19,8 +19,8 @@ export default function RootLayout() {
         const startedAt = await SecureStore.getItemAsync('waveone_plan_started_at');
         if (startedAt) {
           const elapsed = Date.now() - parseInt(startedAt);
-          const sevenDays = 7 * 24 * 60 * 60 * 1000;
-          if (elapsed > sevenDays) {
+          const oneMonth = 30 * 24 * 60 * 60 * 1000;
+          if (elapsed > oneMonth) {
             await SecureStore.deleteItemAsync('waveone_auth');
             router.replace('/paywall');
             return;

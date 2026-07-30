@@ -14,16 +14,16 @@ const { width } = Dimensions.get('window');
 const SLIDES = [
   {
     id: '1',
-    tag: 'WELCOME',
-    title: 'Your professional\nnews terminal.',
-    body: 'Wave:one delivers sector-specific news briefings for legal, health, education, and software professionals — in Turkish, powered by AI.',
+    tag: 'HOŞ GELDİNİZ',
+    title: 'Profesyonel\nhaber terminaliniz.',
+    body: 'Wave:one, hukuk, sağlık, eğitim ve yazılım profesyonelleri için sektöre özel haber brifingleri sunar — yapay zeka destekli, Türkçe.',
     accent: '#d4a853',
   },
   {
     id: '2',
-    tag: 'AI-POWERED',
-    title: 'Every article,\nsummarized.',
-    body: 'Tap any article to get an instant Turkish summary with key points — no more reading through walls of English text to find what matters.',
+    tag: 'YAPAY ZEKA DESTEKLİ',
+    title: 'Her makale,\nözetlenmiş.',
+    body: 'Herhangi bir makaleye dokunarak önemli noktalarıyla birlikte anında Türkçe özet alın — aradığınızı bulmak için İngilizce metin duvarlarını okumaya gerek yok.',
     accent: '#9070c0',
   },
 ];

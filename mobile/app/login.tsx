@@ -69,7 +69,7 @@ export default function LoginScreen() {
           <Text style={styles.logo}>
             WAVE<Text style={styles.logoAccent}>:ONE</Text>
           </Text>
-          <Text style={styles.tagline}>PROFESSIONAL BRIEFING</Text>
+          <Text style={styles.tagline}>PROFESYONEL BRİFİNG</Text>
         </View>
 
         <View style={styles.divider} />
@@ -126,13 +126,13 @@ export default function LoginScreen() {
         )}
         {mode === "register" && (!plan || plan === "trial") && (
           <View style={styles.planBadge}>
-            <Text style={styles.planBadgeText}>7 günlük ücretsiz deneme</Text>
+            <Text style={styles.planBadgeText}>1 ay ücretsiz deneme</Text>
           </View>
         )}
 
         {/* Form */}
         <View style={styles.form}>
-          <Text style={styles.label}>EMAIL</Text>
+          <Text style={styles.label}>E-POSTA</Text>
           <TextInput
             style={[styles.input, !!error && styles.inputError]}
             value={email}

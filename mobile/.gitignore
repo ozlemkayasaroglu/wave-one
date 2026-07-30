@@ -4,3 +4,9 @@
 
 expo-env.d.ts
 # @end expo-cli
+
+# Signing credentials — never commit
+credentials.json
+android-release.keystore
+*.keystore
+*.jks

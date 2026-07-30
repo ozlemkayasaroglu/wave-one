@@ -12,7 +12,7 @@ export function Header({ accentColor }: Props) {
     <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
       <View style={styles.row}>
         <Text style={styles.logo}>WAVE<Text style={{ color: accentColor }}>:ONE</Text></Text>
-        <Text style={styles.tagline}>PROFESSIONAL BRIEFING</Text>
+        <Text style={styles.tagline}>PROFESYONEL BRİFİNG</Text>
       </View>
       <View style={[styles.divider, { backgroundColor: accentColor + '22' }]} />
     </View>

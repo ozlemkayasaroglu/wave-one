@@ -44,7 +44,7 @@ export default function PaywallScreen() {
     >
       {/* Logo */}
       <Text style={styles.logo}>WAVE<Text style={styles.logoAccent}>:ONE</Text></Text>
-      <Text style={styles.subtitle}>PROFESSIONAL BRIEFING</Text>
+      <Text style={styles.subtitle}>PROFESYONEL BRİFİNG</Text>
 
       <View style={styles.divider} />
 
@@ -108,14 +108,20 @@ export default function PaywallScreen() {
       </View>
 
       {/* CTA */}
-      <TouchableOpacity style={styles.cta} onPress={subscribe} activeOpacity={0.85}>
-        <Text style={styles.ctaText}>
-          {selected === 'monthly' ? '₺99/ay ile Başla' : '₺790/yıl ile Başla'}
+      <TouchableOpacity style={styles.cta} onPress={startTrial} activeOpacity={0.85}>
+        <View style={styles.ctaBadge}>
+          <Text style={styles.ctaBadgeText}>ÜCRETSİZ</Text>
+        </View>
+        <Text style={styles.ctaText}>1 Ay Ücretsiz Başla</Text>
+        <Text style={styles.ctaSub}>
+          Sonra {selected === 'monthly' ? '₺99/ay' : '₺790/yıl'} · İstediğin zaman iptal et
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={startTrial} activeOpacity={0.7}>
-        <Text style={styles.trial}>7 gün ücretsiz dene · İstediğin zaman iptal et</Text>
+      <TouchableOpacity onPress={subscribe} activeOpacity={0.7}>
+        <Text style={styles.trial}>
+          Denemeyi atla, hemen {selected === 'monthly' ? '₺99/ay' : '₺790/yıl'} ile abone ol
+        </Text>
       </TouchableOpacity>
 
       <View style={styles.divider} />
@@ -275,15 +281,36 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#4caf8c',
     borderRadius: 4,
-    paddingVertical: 16,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
     alignItems: 'center',
     marginBottom: 12,
   },
+  ctaBadge: {
+    backgroundColor: '#020d04',
+    borderRadius: 2,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    marginBottom: 8,
+  },
+  ctaBadgeText: {
+    color: '#4caf8c',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1.5,
+    fontFamily: 'monospace',
+  },
   ctaText: {
     color: '#020d04',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '800',
     letterSpacing: 0.5,
+  },
+  ctaSub: {
+    color: '#0a3520',
+    fontSize: 12,
+    fontWeight: '600',
+    marginTop: 4,
   },
   trial: {
     color: '#4a6650',

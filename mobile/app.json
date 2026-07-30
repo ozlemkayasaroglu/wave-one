@@ -24,15 +24,25 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#020d04"
       },
-      "package": "com.waveone.app"
+      "package": "com.waveoneapp.mobile"
     },
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "expo-asset"
+      "expo-asset",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7038ade5-8ef4-484a-8a3e-0f97ca96eabc"
+      }
+    },
+    "owner": "tdmatch"
   }
 }
